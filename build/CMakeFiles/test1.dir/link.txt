@@ -1,0 +1,1 @@
+/usr/bin/gfortran     -O3  -pthread -funroll-all-loops -O3 CMakeFiles/test1.dir/testa.f90.o CMakeFiles/test1.dir/mult.f90.o  -o test1 
