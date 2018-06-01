@@ -1,3 +1,0 @@
-/home/ap/Documents/p1/fortran_proj_1/pfUnitZajecia/build/CMakeFiles/rebuild_cache.dir
-/home/ap/Documents/p1/fortran_proj_1/pfUnitZajecia/build/CMakeFiles/edit_cache.dir
-/home/ap/Documents/p1/fortran_proj_1/pfUnitZajecia/build/CMakeFiles/test1.dir
