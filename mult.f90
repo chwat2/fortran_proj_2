@@ -20,19 +20,19 @@ contains
 
         WRITE(*,*) shape1
 
-        if (shape1(1) .NE. shape2(2)) then
+        if (shape1(2) .NE. shape2(1)) then
             error = 1
             return
         endif
 
-        if ((shape3(2) .NE. shape1(2)) .OR. (shape3(1) .NE. shape2(1))) then
+        if ((shape3(1) .NE. shape1(1)) .OR. (shape3(2) .NE. shape2(2))) then
             error = 2
             return
         endif
 
         do i = 1, shape1(1)
             do j = 1, shape2(2)
-                do k = 1, shape1(1)
+                do k = 1, shape1(2)
                     result(i,j) = result(i,j) + m1(i,k) * m2(k,j)
                 end do
             end do
@@ -55,18 +55,18 @@ contains
         shape2 = shape(m2)
         shape3 = shape(result)
 
-        if (shape1(1) .NE. shape2(2)) then
+        if (shape1(2) .NE. shape2(1)) then
             error = 1
             return
         endif
 
-        if ((shape3(2) .NE. shape1(2)) .OR. (shape3(1) .NE. shape2(1))) then
+        if ((shape3(1) .NE. shape1(1)) .OR. (shape3(2) .NE. shape2(2))) then
             error = 2
             return
         endif
 
-        do i = 1, shape2(1)
-            do j = 1, shape1(2)
+        do i = 1, shape1(1)
+            do j = 1, shape2(2)
                 result(i,j) = DOT_PRODUCT(m1(i,:), m2(:,j))
             end do
         end do
@@ -89,25 +89,23 @@ contains
         shape2 = shape(m2)
         shape3 = shape(result)
 
-        if (shape1(1) .NE. shape2(2)) then
+        if (shape1(2) .NE. shape2(1)) then
             error = 1
             return
         endif
 
-        if ((shape3(2) .NE. shape1(2)) .OR. (shape3(1) .NE. shape2(1))) then
+        if ((shape3(1) .NE. shape1(1)) .OR. (shape3(2) .NE. shape2(2))) then
             error = 2
             return
         endif
 
-
-
         ! use -funroll-loops
         ichunk = 512 ! I have a 3MB cache size (real*4)
-        do ii = 1, shape2(1), ichunk
-           do jj = 1, shape1(1), ichunk
+        do ii = 1, shape1(1), ichunk
+           do jj = 1, shape2(2), ichunk
 
-              do i = ii, min(ii + ichunk - 1, shape2(1))
-                 do j = jj, min(jj + ichunk - 1, shape1(1))
+              do i = ii, min(ii + ichunk - 1, shape1(1))
+                 do j = jj, min(jj + ichunk - 1, shape2(2))
                     do k = 1, shape1(2)
                        result(i,j) = result(i,j) + m1(i,k) * m2(k,j)
                     end do
@@ -135,30 +133,22 @@ contains
         shape2 = shape(m2)
         shape3 = shape(result)
 
-        if (shape1(1) .NE. shape2(2)) then
+        if (shape1(2) .NE. shape2(1)) then
             error = 1
             return
         endif
 
-        if ((shape3(2) .NE. shape1(2)) .OR. (shape3(1) .NE. shape2(1))) then
+        if ((shape3(1) .NE. shape1(1)) .OR. (shape3(2) .NE. shape2(2))) then
             error = 2
             return
         endif
 
         ! use -funroll-loops
         ichunk = 512 ! I have a 3MB cache size (real*4)
-        do jj = 1, shape2(1), ichunk
-           do kk = 1, shape1(1), ichunk
-
-              do j = jj, min(jj + ichunk - 1, shape2(1))
-                 do k = kk, min(kk + ichunk - 1, shape1(1))
-                    do i = 1, shape1(2)
-                       result(i, j) = result(i, j) + m1(k,j) * m2(i,k)
-                    end do
-                 end do
-              end do
-
-           end do
+        do i = 1, shape1(1)
+            do j = 1, shape2(2)
+                result(i,j) = DOT_PRODUCT(m1(i,:), m2(:,j))
+            end do
         end do
 
     end subroutine
