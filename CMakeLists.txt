@@ -46,4 +46,4 @@ set(CMAKE_Fortran_FLAGS "${CMAKE_Fortran_RELEASE_FLAGS} ${realeaseopts}")
 set (CMAKE_Fortran_FLAGS "${CMAKE_Fortran_FLAGS}")
 set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS}")
 
-add_executable(test1 testa.f90 mult.f90)
+add_executable(test1 test.f90 mult.f90)
