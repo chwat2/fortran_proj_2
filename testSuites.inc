@@ -1,1 +1,6 @@
-ADD_TEST_SUITE(multTest_suite)
+ADD_TEST_SUITE(multTest_0_0_suite)
+ADD_TEST_SUITE(multTest_0_1_suite)
+ADD_TEST_SUITE(multTest_0_2_suite)
+ADD_TEST_SUITE(multTest_0_3_suite)
+ADD_TEST_SUITE(multTest_0_4_suite)
+ADD_TEST_SUITE(multTest_0_5_suite)

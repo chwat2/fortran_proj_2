@@ -4,45 +4,62 @@ module mult
 
 contains
 
-  subroutine makeSimulation(N)
+  subroutine makeSimulation(m)
     implicit none
 
       real,allocatable :: m1(:,:), m2(:,:),result(:,:);
 
-      integer, intent(in) :: N;
+      integer, intent(in) :: m;
       integer :: i,j;
       real (kind = 8) :: k;
       integer :: error;
-integer (kind = 4):: iclock;
-real (kind = 8) :: start,finish
+      integer (kind = 4):: iclock;
+      real (kind = 8) :: start,finish
 
-      allocate(m1(N,N));
-      allocate(m2(N,N));
-      allocate(result(N,N));
+    allocate(m1(m,m));
+    allocate(m2(m,m));
+    allocate(result(m,m));
 
-      error = 0;
+    error = 0;
 
-      k=1.d0;
-      do i = 1, N
-          do j = 1, N
-                  m1(i,j) = k;
-                  k = k + 1.d0;
-          end do
-      end do
-      do i = 1, N
-          do j = 1, N
-                  m2(i,j) = k;
-                  k = k + 1.d0;
-          end do
-      end do
-call cpu_time(start)
-      call mult2(m1,m2,result,error)
-call cpu_time(finish)
-      WRITE(*,*) result .eq. matmul(m1,m2)
-      print '("Time = ", f6.3," seconds.")',finish-start
-      if (allocated(m1)) deallocate(m1)
-      if (allocated(m2)) deallocate(m2)
-      if (allocated(result)) deallocate(result)
+    k=1.d0;
+    do i = 1,m
+        do j = 1, m
+                m1(i,j) = k;
+                k = k + 1.d0;
+        end do
+    end do
+    do i = 1, m
+        do j = 1, m
+                m2(i,j) = k;
+                k = k + 1.d0;
+        end do
+    end do
+
+    call cpu_time(start)
+          call mult10(m1,m2,result,error)
+    call cpu_time(finish)
+    WRITE(7,*) m,10,finish-start
+    call cpu_time(start)
+          call mult1(m1,m2,result,error)
+    call cpu_time(finish)
+    WRITE(7,*) m,1,finish-start
+    call cpu_time(start)
+          call mult2(m1,m2,result,error)
+    call cpu_time(finish)
+    WRITE(7,*) m,2,finish-start
+    call cpu_time(start)
+          call mult3(m1,m2,result,error)
+    call cpu_time(finish)
+    WRITE(7,*) m,3,finish-start
+    call cpu_time(start)
+          call mult4(m1,m2,result,error)
+    call cpu_time(finish)
+    WRITE(7,*) m,4,finish-start
+    
+    if (allocated(m1)) deallocate(m1)
+    if (allocated(m2)) deallocate(m2)
+    if (allocated(result)) deallocate(result)
 
   end subroutine
 
@@ -190,7 +207,7 @@ call cpu_time(finish)
         real, intent(out) :: result(:, :)
         integer, intent(out) :: error
         integer :: shape1(2), shape2(2), shape3(2)
-        integer(kind = 4) :: i, j, k, jj, kk
+        integer(kind = 4) :: i, j, k, ii, kk
         integer (kind = 4) :: ichunk
 
         result = 0.d0
@@ -212,11 +229,13 @@ call cpu_time(finish)
 
         ! use -funroll-loops
         ichunk = 512 ! I have a 3MB cache size (real*4)
-        do i = 1, shape1(1)
+      do ii = 1, shape1(1), ichunk
+        do i = 1,  min(ii + ichunk - 1, shape1(1))
             do j = 1, shape2(2)
                 result(i,j) = DOT_PRODUCT(m1(i,:), m2(:,j))
             end do
         end do
+      end do
 
     end subroutine
 
