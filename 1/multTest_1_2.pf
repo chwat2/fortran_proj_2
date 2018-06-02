@@ -1,0 +1,37 @@
+@test
+
+subroutine test11()
+  use mult
+  use pfunit_mod
+  implicit none
+  integer :: m,n,g;
+  integer :: i,j;
+  real,allocatable :: m1(:, :), m2(:, :)
+  real,allocatable :: result(:, :)
+  real (kind = 8) :: k;
+  integer :: error;
+n = 1
+g = 1
+m = 1
+allocate(m1(n,g));
+allocate(m2(g,m));
+allocate(result(n,m));
+
+error = 0;
+
+k=1.d0;
+do i = 1,n
+    do j = 1, g
+            m1(i,j) = k;
+            k = k + 1.d0;
+    end do
+end do
+do i = 1, g
+    do j = 1, m
+            m2(i,j) = k;
+            k = k + 1.d0;
+    end do
+end do
+call mult2(m1,m2,result,error)
+  @assertEqual(matmul(m1,m2),result)
+end
