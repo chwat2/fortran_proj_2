@@ -56,7 +56,7 @@ contains
           call mult4(m1,m2,result,error)
     call cpu_time(finish)
     WRITE(7,*) m,4,finish-start
-    
+
     if (allocated(m1)) deallocate(m1)
     if (allocated(m2)) deallocate(m2)
     if (allocated(result)) deallocate(result)
@@ -184,7 +184,7 @@ contains
         endif
 
         ! use -funroll-loops
-        ichunk = 512 ! I have a 3MB cache size (real*4)
+        ichunk = 512 ! I have a 3MB cache size too
         do ii = 1, shape1(1), ichunk
            do jj = 1, shape2(2), ichunk
 
